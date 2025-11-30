@@ -43,15 +43,15 @@ export async function deployCommand(serviceName, options) {
 
   // Deploy all services
   if (options.all) {
-    console.log(chalk.hex('#FF6B00').bold('\n  Deploying all Railway services...\n'));
+    console.log(chalk.hex('#FF6B00').bold('\n  🚀 Deploying all Railway services... 📦\n'));
 
     for (const service of railwayServices) {
-      const spinner = ora(`Deploying ${service.name}...`).start();
+      const spinner = ora(`📤 Deploying ${service.name}...`).start();
       try {
         await deployService(service, true);
-        spinner.succeed(chalk.green(`${service.name} deployed`));
+        spinner.succeed(chalk.green(`✅ ${service.name} shipped!`));
       } catch (e) {
-        spinner.fail(chalk.red(`${service.name} failed: ${e.message}`));
+        spinner.fail(chalk.red(`💥 ${service.name} failed: ${e.message}`));
       }
     }
     return;
@@ -76,37 +76,37 @@ export async function deployCommand(serviceName, options) {
   const service = getServiceBySlug(serviceName);
 
   if (!service) {
-    console.log(chalk.red(`\n  Service "${serviceName}" not found.\n`));
-    console.log(chalk.gray('  Available services:'));
+    console.log(chalk.red(`\n  🤷 Service "${serviceName}" not found.\n`));
+    console.log(chalk.gray('  📋 Available services:'));
     railwayServices.forEach(s => {
-      console.log(chalk.gray(`    - ${s.slug}`));
+      console.log(chalk.gray(`    🔹 ${s.slug}`));
     });
     return;
   }
 
   if (!service.railway) {
-    console.log(chalk.yellow(`\n  "${service.name}" is hosted on Cloudflare Pages, not Railway.`));
-    console.log(chalk.gray('  Cloudflare Pages deploys automatically on git push.\n'));
+    console.log(chalk.yellow(`\n  ☁️  "${service.name}" is hosted on Cloudflare Pages, not Railway.`));
+    console.log(chalk.gray('  🔄 Cloudflare Pages deploys automatically on git push.\n'));
     return;
   }
 
-  console.log(chalk.hex('#FF6B00').bold(`\n  Deploying ${service.name}...\n`));
+  console.log(chalk.hex('#FF6B00').bold(`\n  🚀 Deploying ${service.name}... 🛠️\n`));
 
-  const spinner = options.detach ? ora('Starting deployment...').start() : null;
+  const spinner = options.detach ? ora('📡 Starting deployment...').start() : null;
 
   try {
     const result = await deployService(service, options.detach);
 
     if (options.detach) {
-      spinner?.succeed(chalk.green('Deployment started in background'));
-      console.log(chalk.gray('\n  Check status with: br status'));
+      spinner?.succeed(chalk.green('🎯 Deployment started in background'));
+      console.log(chalk.gray('\n  👀 Check status with: br status'));
     } else {
-      console.log(chalk.green('\n  ✓ Deployment complete!\n'));
+      console.log(chalk.green('\n  🎉 Deployment complete! Ship it! 🚢\n'));
     }
   } catch (e) {
     if (options.detach) {
-      spinner?.fail(chalk.red('Deployment failed'));
+      spinner?.fail(chalk.red('💀 Deployment failed'));
     }
-    console.log(chalk.red(`\n  Error: ${e.message}\n`));
+    console.log(chalk.red(`\n  😭 Error: ${e.message}\n`));
   }
 }

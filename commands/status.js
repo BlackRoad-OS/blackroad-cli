@@ -58,11 +58,11 @@ export async function statusCommand(options) {
   // Overall status banner
   console.log();
   if (downCount === 0 && degradedCount === 0) {
-    console.log(chalk.green.bold('  ✓ All Systems Operational'));
+    console.log(chalk.green.bold('  ✨ All Systems Operational 🚀'));
   } else if (downCount > 0) {
-    console.log(chalk.red.bold(`  ✗ ${downCount} service(s) down`));
+    console.log(chalk.red.bold(`  🔥 ${downCount} service(s) down 💀`));
   } else {
-    console.log(chalk.yellow.bold(`  ⚠ ${degradedCount} service(s) degraded`));
+    console.log(chalk.yellow.bold(`  ⚡ ${degradedCount} service(s) degraded 🔧`));
   }
   console.log();
 
@@ -83,20 +83,20 @@ export async function statusCommand(options) {
 
   for (const service of results) {
     const statusIcon = service.status === 'healthy'
-      ? chalk.green('●')
+      ? '💚'
       : service.status === 'degraded'
-        ? chalk.yellow('●')
-        : chalk.red('●');
+        ? '💛'
+        : '💔';
 
     const responseTime = service.responseTime < 500
-      ? chalk.green(`${service.responseTime}ms`)
+      ? chalk.green(`⚡ ${service.responseTime}ms`)
       : service.responseTime < 1500
-        ? chalk.yellow(`${service.responseTime}ms`)
-        : chalk.red(`${service.responseTime}ms`);
+        ? chalk.yellow(`🐢 ${service.responseTime}ms`)
+        : chalk.red(`🦥 ${service.responseTime}ms`);
 
     const platform = service.railway
-      ? chalk.hex('#7B2CBF')('Railway')
-      : chalk.hex('#F48120')('Cloudflare');
+      ? '🚂 Railway'
+      : '☁️  Cloudflare';
 
     table.push([
       statusIcon,
@@ -109,7 +109,7 @@ export async function statusCommand(options) {
 
   console.log(table.toString());
   console.log();
-  console.log(chalk.gray(`  ${healthyCount} healthy · ${degradedCount} degraded · ${downCount} down`));
+  console.log(chalk.gray(`  💚 ${healthyCount} vibin · 💛 ${degradedCount} struggling · 💔 ${downCount} ded`));
   console.log();
 
   // Watch mode

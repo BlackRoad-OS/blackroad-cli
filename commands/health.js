@@ -52,14 +52,14 @@ async function healService(service) {
 }
 
 export async function healthCommand(options) {
-  console.log(chalk.hex('#FF6B00').bold('\n  Running health checks...\n'));
+  console.log(chalk.hex('#FF6B00').bold('\n  🏥 Running health checks... 🩺\n'));
 
   const services = getAllServices();
   const results = [];
 
   // Check each service
   for (const service of services) {
-    const spinner = ora(`Checking ${service.name}...`).start();
+    const spinner = ora(`🔍 Checking ${service.name}...`).start();
 
     const health = await checkEndpoint(service.url);
 
@@ -69,11 +69,11 @@ export async function healthCommand(options) {
     });
 
     if (health.status === 'healthy') {
-      spinner.succeed(chalk.green(`${service.name} healthy (${health.time}ms)`));
+      spinner.succeed(chalk.green(`💪 ${service.name} healthy (${health.time}ms)`));
     } else if (health.status === 'unhealthy') {
-      spinner.warn(chalk.yellow(`${service.name} unhealthy (HTTP ${health.code})`));
+      spinner.warn(chalk.yellow(`🤒 ${service.name} unhealthy (HTTP ${health.code})`));
     } else {
-      spinner.fail(chalk.red(`${service.name} down`));
+      spinner.fail(chalk.red(`☠️  ${service.name} down`));
     }
   }
 
@@ -120,26 +120,26 @@ export async function healthCommand(options) {
 
   // Auto-heal if requested
   if (options.heal && unhealthy.length > 0) {
-    console.log(chalk.hex('#FF6B00').bold('\n  Attempting auto-heal...\n'));
+    console.log(chalk.hex('#FF6B00').bold('\n  🧬 Attempting auto-heal... 💉\n'));
 
     for (const service of unhealthy) {
-      const spinner = ora(`Healing ${service.name}...`).start();
+      const spinner = ora(`🩹 Healing ${service.name}...`).start();
 
       const result = await healService(service);
 
       if (result.success) {
-        spinner.succeed(chalk.green(`${service.name} redeploy triggered`));
+        spinner.succeed(chalk.green(`✨ ${service.name} redeploy triggered`));
       } else {
-        spinner.fail(chalk.red(`${service.name} heal failed`));
+        spinner.fail(chalk.red(`💀 ${service.name} heal failed`));
       }
     }
 
-    console.log(chalk.gray('\n  Services will take 1-2 minutes to redeploy.'));
-    console.log(chalk.gray('  Run `br health` again to verify.\n'));
+    console.log(chalk.gray('\n  ⏳ Services will take 1-2 minutes to redeploy.'));
+    console.log(chalk.gray('  🔄 Run `br health` again to verify.\n'));
   } else if (unhealthy.length > 0 && !options.heal) {
-    console.log(chalk.yellow(`\n  ${unhealthy.length} service(s) need attention.`));
-    console.log(chalk.gray('  Run `br health --heal` to attempt auto-recovery.\n'));
+    console.log(chalk.yellow(`\n  🚨 ${unhealthy.length} service(s) need attention.`));
+    console.log(chalk.gray('  💊 Run `br health --heal` to attempt auto-recovery.\n'));
   } else if (unhealthy.length === 0) {
-    console.log(chalk.green('\n  All services healthy!\n'));
+    console.log(chalk.green('\n  🎉 All services healthy! 💯\n'));
   }
 }
