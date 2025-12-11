@@ -1,0 +1,70 @@
+# ngrok Configuration for BlackRoad OS
+# Development tunnel configuration
+#
+# Usage:
+#   ngrok start --all          # Start all tunnels
+#   ngrok start api            # Start specific tunnel
+#   ngrok http 3000            # Quick tunnel
+
+version: "2"
+authtoken: "${NGROK_AUTH_TOKEN}"
+
+# API endpoint configuration
+api:
+  addr: 127.0.0.1:4040
+
+# Tunnel definitions
+tunnels:
+  # API Gateway
+  api:
+    proto: http
+    addr: 3000
+    hostname: "${NGROK_API_SUBDOMAIN}.ngrok.io"
+    inspect: true
+    bind_tls: true
+
+  # WebSocket Server
+  ws:
+    proto: http
+    addr: 8080
+    hostname: "${NGROK_WS_SUBDOMAIN}.ngrok.io"
+    inspect: true
+    bind_tls: true
+
+  # Agent Hub
+  agents:
+    proto: http
+    addr: 4000
+    inspect: true
+    bind_tls: true
+
+  # LLM Server
+  llm:
+    proto: http
+    addr: 5000
+    inspect: true
+    bind_tls: true
+
+  # RAG Service
+  rag:
+    proto: http
+    addr: 6000
+    inspect: true
+    bind_tls: true
+
+  # Dashboard
+  dashboard:
+    proto: http
+    addr: 3001
+    inspect: true
+    bind_tls: true
+
+# Logging
+log_level: info
+log_format: json
+log: stdout
+
+# Webhook configuration (optional)
+# webhooks:
+#   - url: https://api.blackroad.io/webhooks/ngrok
+#     events: ["session.started", "session.stopped"]

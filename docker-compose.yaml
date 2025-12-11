@@ -1,0 +1,280 @@
+# BlackRoad OS Docker Compose Configuration
+# Full-stack deployment with all services
+version: '3.9'
+
+services:
+  # ============================================================
+  # CORE SERVICES
+  # ============================================================
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: blackroad-api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  agent-hub:
+    build:
+      context: ./services/agent-hub
+      dockerfile: Dockerfile
+    container_name: blackroad-agent-hub
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - REDIS_URL=redis://redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+    depends_on:
+      - redis
+      - vectordb
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  ws-server:
+    build:
+      context: ./services/ws-server
+      dockerfile: Dockerfile
+    container_name: blackroad-ws-server
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  # ============================================================
+  # AI/ML SERVICES
+  # ============================================================
+
+  llm-server:
+    build:
+      context: ./services/llm-server
+      dockerfile: Dockerfile
+    container_name: blackroad-llm-server
+    ports:
+      - "5000:5000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - XAI_API_KEY=${XAI_API_KEY}
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+    volumes:
+      - llm-cache:/app/cache
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  rag-service:
+    build:
+      context: ./services/rag-service
+      dockerfile: Dockerfile
+    container_name: blackroad-rag-service
+    ports:
+      - "6000:6000"
+    environment:
+      - VECTORDB_URL=http://vectordb:6333
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+    depends_on:
+      - vectordb
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  ml-pipeline:
+    build:
+      context: ./services/ml-pipeline
+      dockerfile: Dockerfile
+    container_name: blackroad-ml-pipeline
+    environment:
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+      - WANDB_API_KEY=${WANDB_API_KEY}
+    volumes:
+      - ml-data:/app/data
+      - ml-models:/app/models
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  # ============================================================
+  # DATA SERVICES
+  # ============================================================
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: blackroad-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-blackroad}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB:-blackroad}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blackroad"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: blackroad-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  vectordb:
+    image: qdrant/qdrant:latest
+    container_name: blackroad-vectordb
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - vectordb-data:/qdrant/storage
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  # ============================================================
+  # MESSAGING & STREAMING
+  # ============================================================
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: blackroad-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-blackroad}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  # ============================================================
+  # MONITORING & OBSERVABILITY
+  # ============================================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: blackroad-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: blackroad-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+
+  # ============================================================
+  # TUNNELING (Cloudflare)
+  # ============================================================
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: blackroad-cloudflared
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - blackroad-network
+    restart: unless-stopped
+    depends_on:
+      - api-gateway
+      - agent-hub
+      - ws-server
+
+# ============================================================
+# NETWORKS
+# ============================================================
+
+networks:
+  blackroad-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ============================================================
+# VOLUMES
+# ============================================================
+
+volumes:
+  postgres-data:
+  redis-data:
+  vectordb-data:
+  rabbitmq-data:
+  prometheus-data:
+  grafana-data:
+  llm-cache:
+  ml-data:
+  ml-models:
