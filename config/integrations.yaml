@@ -1,0 +1,722 @@
+# BlackRoad OS Platform Integrations Configuration
+# All platform integrations with security-first approach
+# Version: 2.0.0
+
+# ============================================================
+# DEPLOYMENT PLATFORMS
+# ============================================================
+
+platforms:
+  # Railway - Primary backend hosting
+  railway:
+    enabled: true
+    display_name: "Railway"
+    env_key: "RAILWAY_TOKEN"
+    project_id_key: "RAILWAY_PROJECT_ID"
+    dashboard: "https://railway.com/project/03ce1e43-5086-4255-b2bc-0146c8916f4c"
+    services:
+      - name: api-gateway
+        description: "API Gateway and routing"
+      - name: agent-hub
+        description: "AI Agent orchestration hub"
+      - name: ws-server
+        description: "WebSocket server for real-time"
+      - name: mesh-network
+        description: "Service mesh networking"
+      - name: vectordb
+        description: "Vector database for embeddings"
+      - name: event-stream
+        description: "Event streaming service"
+      - name: message-queue
+        description: "Message queue (Redis/RabbitMQ)"
+      - name: tsdb
+        description: "Time series database"
+      - name: llm-server
+        description: "LLM inference server"
+      - name: ml-pipeline
+        description: "ML training pipeline"
+      - name: rag-service
+        description: "RAG retrieval service"
+      - name: model-forge
+        description: "Model fine-tuning forge"
+
+  # Cloudflare - CDN and edge computing
+  cloudflare:
+    enabled: true
+    display_name: "Cloudflare"
+    env_key: "CLOUDFLARE_API_TOKEN"
+    account_id_key: "CLOUDFLARE_ACCOUNT_ID"
+    dashboard: "https://dash.cloudflare.com/848cf0b18d51e0170e0d1537aec3505a"
+    domains:
+      - blackroad.io
+      - blackroad.network
+      - blackroad.systems
+      - blackroad.me
+      - blackroadai.com
+      - lucidia.earth
+      - lucidia.studio
+      - math.blackroad.io
+    tunnels:
+      enabled: true
+      tunnel_id_key: "CLOUDFLARE_TUNNEL_ID"
+      tunnel_secret_key: "CLOUDFLARE_TUNNEL_SECRET"
+
+  # Vercel - Frontend deployments
+  vercel:
+    enabled: true
+    display_name: "Vercel"
+    env_key: "VERCEL_TOKEN"
+    org_id_key: "VERCEL_ORG_ID"
+    project_id_key: "VERCEL_PROJECT_ID"
+    projects:
+      - math-blackroad-io
+      - blackroadai
+      - lucidia-earth
+      - blackroad-app
+      - blackroad-docs
+
+  # DigitalOcean - Custom infrastructure
+  digitalocean:
+    enabled: true
+    display_name: "DigitalOcean"
+    env_key: "DIGITALOCEAN_TOKEN"
+    ssh_key: "DIGITALOCEAN_SSH_KEY"
+    droplets:
+      - name: blackroad-main
+        ip_key: "DROPLET_IP"
+        path: "/opt/blackroad"
+        description: "Main application server"
+      - name: blackroad-ml
+        ip_key: "DROPLET_ML_IP"
+        path: "/opt/blackroad-ml"
+        description: "ML/AI workloads server"
+
+  # Raspberry Pi Fleet - Edge computing
+  raspberry_pi:
+    enabled: true
+    display_name: "Raspberry Pi Fleet"
+    ssh_key: "PI_SSH_KEY"
+    devices:
+      - name: lucidia
+        ip: "192.168.4.38"
+        description: "Lucidia edge node"
+      - name: blackroad-pi
+        ip: "192.168.4.64"
+        description: "BlackRoad main Pi"
+      - name: mystery-pi
+        ip: "192.168.4.49"
+        description: "Mystery edge node"
+
+  # Docker - Container orchestration
+  docker:
+    enabled: true
+    display_name: "Docker"
+    registry: "ghcr.io/blackroad-os"
+    registry_token_key: "GHCR_TOKEN"
+    compose_files:
+      - docker-compose.yaml
+      - docker-compose.prod.yaml
+      - docker-compose.dev.yaml
+
+  # GitHub - Source control and CI/CD
+  github:
+    enabled: true
+    display_name: "GitHub"
+    env_key: "GITHUB_TOKEN"
+    organization: "BlackRoad-OS"
+    repositories:
+      - blackroad-cli
+      - blackroad-os-infra
+      - blackroad-agents
+    actions_dashboard: "https://github.com/BlackRoad-OS/blackroad-cli/actions"
+
+# ============================================================
+# TUNNEL / NETWORKING
+# ============================================================
+
+tunnels:
+  # Cloudflare Tunnels (Zero Trust)
+  cloudflare_tunnel:
+    enabled: true
+    display_name: "Cloudflare Tunnel"
+    env_key: "CLOUDFLARE_TUNNEL_TOKEN"
+    tunnel_id_key: "CLOUDFLARE_TUNNEL_ID"
+    config_path: ".cloudflared/config.yml"
+    routes:
+      - hostname: api.blackroad.io
+        service: http://localhost:3000
+      - hostname: ws.blackroad.io
+        service: ws://localhost:8080
+      - hostname: agents.blackroad.io
+        service: http://localhost:4000
+
+  # ngrok - Development tunnels
+  ngrok:
+    enabled: true
+    display_name: "ngrok"
+    env_key: "NGROK_AUTH_TOKEN"
+    config_path: ".ngrok/ngrok.yml"
+    tunnels:
+      - name: api
+        port: 3000
+        subdomain_key: "NGROK_API_SUBDOMAIN"
+      - name: ws
+        port: 8080
+        subdomain_key: "NGROK_WS_SUBDOMAIN"
+
+  # Tailscale - Mesh VPN
+  tailscale:
+    enabled: true
+    display_name: "Tailscale"
+    env_key: "TAILSCALE_AUTH_KEY"
+    network_name: "blackroad"
+
+# ============================================================
+# MOBILE / APP INTEGRATIONS
+# ============================================================
+
+mobile_apps:
+  # Warp - Modern terminal
+  warp:
+    enabled: true
+    display_name: "Warp Terminal"
+    config_path: "~/.warp/blackroad"
+    workflows:
+      - name: deploy
+        command: "br deploy"
+        description: "Deploy to all platforms"
+      - name: status
+        command: "br status"
+        description: "Check all services"
+      - name: logs
+        command: "br logs"
+        description: "View service logs"
+    themes:
+      - name: blackroad-dark
+        path: "themes/warp/blackroad-dark.yaml"
+      - name: blackroad-light
+        path: "themes/warp/blackroad-light.yaml"
+
+  # Shellfish - iOS SSH client
+  shellfish:
+    enabled: true
+    display_name: "Shellfish"
+    config_path: "~/.shellfish/blackroad"
+    hosts:
+      - name: droplet
+        host_key: "DROPLET_IP"
+        user: root
+        key_name: "blackroad-key"
+      - name: pi-lucidia
+        host: "192.168.4.38"
+        user: pi
+        key_name: "pi-key"
+      - name: pi-blackroad
+        host: "192.168.4.64"
+        user: pi
+        key_name: "pi-key"
+    snippets:
+      - name: deploy
+        command: "cd /opt/blackroad && ./deploy.sh"
+      - name: logs
+        command: "journalctl -u blackroad -f"
+      - name: restart
+        command: "systemctl restart blackroad"
+
+  # Working Copy - iOS Git client
+  working_copy:
+    enabled: true
+    display_name: "Working Copy"
+    repositories:
+      - name: blackroad-cli
+        url: "git@github.com:BlackRoad-OS/blackroad-cli.git"
+        branch: main
+      - name: blackroad-agents
+        url: "git@github.com:BlackRoad-OS/blackroad-agents.git"
+        branch: main
+    x_callback_url: "working-copy://x-callback-url"
+
+  # Pyto - iOS Python IDE
+  pyto:
+    enabled: true
+    display_name: "Pyto"
+    scripts_path: "scripts/pyto"
+    scripts:
+      - name: deploy_check
+        file: "deploy_check.py"
+        description: "Check deployment status"
+      - name: agent_spawn
+        file: "agent_spawn.py"
+        description: "Spawn an AI agent"
+      - name: status_dashboard
+        file: "status_dashboard.py"
+        description: "Service status dashboard"
+
+# ============================================================
+# PRODUCTIVITY / WORKSPACE INTEGRATIONS
+# ============================================================
+
+productivity:
+  # Asana - Project management
+  asana:
+    enabled: true
+    display_name: "Asana"
+    env_key: "ASANA_TOKEN"
+    workspace_id_key: "ASANA_WORKSPACE_ID"
+    project_id_key: "ASANA_PROJECT_ID"
+    api_base: "https://app.asana.com/api/1.0"
+    webhooks:
+      - event: deployment_complete
+        action: complete_task
+      - event: build_failed
+        action: create_task
+      - event: security_alert
+        action: create_urgent_task
+
+  # Notion - Documentation and knowledge base
+  notion:
+    enabled: true
+    display_name: "Notion"
+    env_key: "NOTION_TOKEN"
+    workspace_id_key: "NOTION_WORKSPACE_ID"
+    api_base: "https://api.notion.com/v1"
+    databases:
+      deployments_db_key: "NOTION_DEPLOYMENTS_DB"
+      incidents_db_key: "NOTION_INCIDENTS_DB"
+      agents_db_key: "NOTION_AGENTS_DB"
+    pages:
+      docs_page_key: "NOTION_DOCS_PAGE"
+      status_page_key: "NOTION_STATUS_PAGE"
+
+  # Linear - Issue tracking
+  linear:
+    enabled: true
+    display_name: "Linear"
+    env_key: "LINEAR_API_KEY"
+    team_id_key: "LINEAR_TEAM_ID"
+    api_base: "https://api.linear.app/graphql"
+    labels:
+      - deployment
+      - infrastructure
+      - ai-agents
+      - security
+
+# ============================================================
+# AUTHENTICATION / PAYMENTS
+# ============================================================
+
+auth:
+  # Clerk - Authentication
+  clerk:
+    enabled: true
+    display_name: "Clerk"
+    publishable_key: "CLERK_PUBLISHABLE_KEY"
+    secret_key: "CLERK_SECRET_KEY"
+    api_base: "https://api.clerk.com/v1"
+    webhook_secret_key: "CLERK_WEBHOOK_SECRET"
+    features:
+      - email_auth
+      - oauth_google
+      - oauth_github
+      - magic_links
+      - passkeys
+      - mfa
+    jwt_verification: true
+    session_management: true
+
+payments:
+  # Stripe - Payment processing
+  stripe:
+    enabled: true
+    display_name: "Stripe"
+    publishable_key: "STRIPE_PUBLISHABLE_KEY"
+    secret_key: "STRIPE_SECRET_KEY"
+    webhook_secret_key: "STRIPE_WEBHOOK_SECRET"
+    api_base: "https://api.stripe.com/v1"
+    products:
+      - name: blackroad_pro
+        price_id_key: "STRIPE_PRO_PRICE_ID"
+        type: subscription
+      - name: blackroad_enterprise
+        price_id_key: "STRIPE_ENTERPRISE_PRICE_ID"
+        type: subscription
+      - name: api_credits
+        price_id_key: "STRIPE_CREDITS_PRICE_ID"
+        type: one_time
+    features:
+      - subscriptions
+      - usage_billing
+      - invoicing
+      - customer_portal
+
+# ============================================================
+# AI / ML MODEL PROVIDERS
+# ============================================================
+
+ai_providers:
+  # Commercial Providers
+  openai:
+    enabled: true
+    display_name: "OpenAI"
+    env_key: "OPENAI_API_KEY"
+    api_base: "https://api.openai.com/v1"
+    models:
+      - gpt-4-turbo
+      - gpt-4o
+      - gpt-4o-mini
+      - o1-preview
+      - o1-mini
+
+  anthropic:
+    enabled: true
+    display_name: "Anthropic"
+    env_key: "ANTHROPIC_API_KEY"
+    api_base: "https://api.anthropic.com/v1"
+    models:
+      - claude-sonnet-4-5-20250929
+      - claude-opus-4-5-20251101
+      - claude-3-5-haiku-20241022
+
+  google:
+    enabled: true
+    display_name: "Google AI"
+    env_key: "GOOGLE_API_KEY"
+    api_base: "https://generativelanguage.googleapis.com/v1"
+    models:
+      - gemini-2.0-flash
+      - gemini-1.5-pro
+      - gemini-1.5-flash
+
+  xai:
+    enabled: true
+    display_name: "xAI"
+    env_key: "XAI_API_KEY"
+    api_base: "https://api.x.ai/v1"
+    models:
+      - grok-2
+      - grok-2-mini
+
+  # Hugging Face - Open source models
+  huggingface:
+    enabled: true
+    display_name: "Hugging Face"
+    env_key: "HUGGINGFACE_TOKEN"
+    api_base: "https://api-inference.huggingface.co"
+    hub_url: "https://huggingface.co"
+    organization: "blackroad-os"
+    spaces:
+      - blackroad-agents
+      - blackroad-embeddings
+      - blackroad-rag
+    inference_endpoints:
+      - name: llama-70b
+        endpoint_key: "HF_LLAMA_ENDPOINT"
+      - name: mistral-7b
+        endpoint_key: "HF_MISTRAL_ENDPOINT"
+      - name: embeddings
+        endpoint_key: "HF_EMBEDDINGS_ENDPOINT"
+
+# ============================================================
+# OPEN SOURCE AI MODELS (Forkable & Auditable)
+# ============================================================
+
+open_source_models:
+  # Large Language Models
+  llm:
+    - name: "Llama 3.1 405B"
+      provider: meta
+      license: "Llama 3.1 Community License"
+      huggingface_id: "meta-llama/Llama-3.1-405B-Instruct"
+      parameters: "405B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "Llama 3.1 70B"
+      provider: meta
+      license: "Llama 3.1 Community License"
+      huggingface_id: "meta-llama/Llama-3.1-70B-Instruct"
+      parameters: "70B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "Llama 3.1 8B"
+      provider: meta
+      license: "Llama 3.1 Community License"
+      huggingface_id: "meta-llama/Llama-3.1-8B-Instruct"
+      parameters: "8B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "Mistral Large 2"
+      provider: mistral
+      license: "Apache 2.0"
+      huggingface_id: "mistralai/Mistral-Large-Instruct-2407"
+      parameters: "123B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "Mixtral 8x22B"
+      provider: mistral
+      license: "Apache 2.0"
+      huggingface_id: "mistralai/Mixtral-8x22B-Instruct-v0.1"
+      parameters: "141B (MoE)"
+      context_length: 65536
+      auditable: true
+      forkable: true
+
+    - name: "Mixtral 8x7B"
+      provider: mistral
+      license: "Apache 2.0"
+      huggingface_id: "mistralai/Mixtral-8x7B-Instruct-v0.1"
+      parameters: "46.7B (MoE)"
+      context_length: 32768
+      auditable: true
+      forkable: true
+
+    - name: "Qwen2.5 72B"
+      provider: alibaba
+      license: "Apache 2.0"
+      huggingface_id: "Qwen/Qwen2.5-72B-Instruct"
+      parameters: "72B"
+      context_length: 131072
+      auditable: true
+      forkable: true
+
+    - name: "DeepSeek V3"
+      provider: deepseek
+      license: "MIT"
+      huggingface_id: "deepseek-ai/DeepSeek-V3"
+      parameters: "671B (MoE)"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "DeepSeek Coder V2"
+      provider: deepseek
+      license: "MIT"
+      huggingface_id: "deepseek-ai/DeepSeek-Coder-V2-Instruct"
+      parameters: "236B (MoE)"
+      context_length: 128000
+      auditable: true
+      forkable: true
+      specialty: code
+
+    - name: "Yi-1.5 34B"
+      provider: 01.ai
+      license: "Apache 2.0"
+      huggingface_id: "01-ai/Yi-1.5-34B-Chat"
+      parameters: "34B"
+      context_length: 4096
+      auditable: true
+      forkable: true
+
+    - name: "Falcon 180B"
+      provider: tii
+      license: "Apache 2.0"
+      huggingface_id: "tiiuae/falcon-180B-chat"
+      parameters: "180B"
+      context_length: 2048
+      auditable: true
+      forkable: true
+
+    - name: "DBRX"
+      provider: databricks
+      license: "Databricks Open Model License"
+      huggingface_id: "databricks/dbrx-instruct"
+      parameters: "132B (MoE)"
+      context_length: 32768
+      auditable: true
+      forkable: true
+
+    - name: "Command R+"
+      provider: cohere
+      license: "CC-BY-NC-4.0"
+      huggingface_id: "CohereForAI/c4ai-command-r-plus"
+      parameters: "104B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "Gemma 2 27B"
+      provider: google
+      license: "Gemma License"
+      huggingface_id: "google/gemma-2-27b-it"
+      parameters: "27B"
+      context_length: 8192
+      auditable: true
+      forkable: true
+
+    - name: "Phi-3 Medium"
+      provider: microsoft
+      license: "MIT"
+      huggingface_id: "microsoft/Phi-3-medium-128k-instruct"
+      parameters: "14B"
+      context_length: 128000
+      auditable: true
+      forkable: true
+
+    - name: "StarCoder2 15B"
+      provider: bigcode
+      license: "BigCode OpenRAIL-M"
+      huggingface_id: "bigcode/starcoder2-15b-instruct-v0.1"
+      parameters: "15B"
+      context_length: 16384
+      auditable: true
+      forkable: true
+      specialty: code
+
+    - name: "CodeLlama 70B"
+      provider: meta
+      license: "Llama 2 Community License"
+      huggingface_id: "codellama/CodeLlama-70b-Instruct-hf"
+      parameters: "70B"
+      context_length: 16384
+      auditable: true
+      forkable: true
+      specialty: code
+
+  # Embedding Models
+  embeddings:
+    - name: "BGE Large"
+      provider: baai
+      license: "MIT"
+      huggingface_id: "BAAI/bge-large-en-v1.5"
+      dimensions: 1024
+      auditable: true
+      forkable: true
+
+    - name: "E5 Large V2"
+      provider: microsoft
+      license: "MIT"
+      huggingface_id: "intfloat/e5-large-v2"
+      dimensions: 1024
+      auditable: true
+      forkable: true
+
+    - name: "GTE Large"
+      provider: alibaba
+      license: "MIT"
+      huggingface_id: "thenlper/gte-large"
+      dimensions: 1024
+      auditable: true
+      forkable: true
+
+    - name: "Nomic Embed"
+      provider: nomic
+      license: "Apache 2.0"
+      huggingface_id: "nomic-ai/nomic-embed-text-v1.5"
+      dimensions: 768
+      auditable: true
+      forkable: true
+
+  # Vision Models
+  vision:
+    - name: "LLaVA 1.6 34B"
+      provider: liuhaotian
+      license: "Apache 2.0"
+      huggingface_id: "liuhaotian/llava-v1.6-34b"
+      parameters: "34B"
+      auditable: true
+      forkable: true
+
+    - name: "InternVL2"
+      provider: opengvlab
+      license: "MIT"
+      huggingface_id: "OpenGVLab/InternVL2-26B"
+      parameters: "26B"
+      auditable: true
+      forkable: true
+
+    - name: "Qwen-VL"
+      provider: alibaba
+      license: "Tongyi Qianwen License"
+      huggingface_id: "Qwen/Qwen-VL-Chat"
+      parameters: "9.6B"
+      auditable: true
+      forkable: true
+
+  # Audio/Speech Models
+  audio:
+    - name: "Whisper Large V3"
+      provider: openai
+      license: "MIT"
+      huggingface_id: "openai/whisper-large-v3"
+      auditable: true
+      forkable: true
+
+    - name: "SeamlessM4T"
+      provider: meta
+      license: "CC-BY-NC-4.0"
+      huggingface_id: "facebook/seamless-m4t-v2-large"
+      auditable: true
+      forkable: true
+
+# ============================================================
+# SECURITY & COMPLIANCE
+# ============================================================
+
+security:
+  # Model auditing configuration
+  model_auditing:
+    enabled: true
+    scan_for_vulnerabilities: true
+    check_training_data_provenance: true
+    verify_licenses: true
+    report_path: "reports/model_audits"
+
+  # Code scanning
+  code_scanning:
+    enabled: true
+    tools:
+      - name: semgrep
+        enabled: true
+      - name: snyk
+        env_key: "SNYK_TOKEN"
+        enabled: true
+      - name: codeql
+        enabled: true
+      - name: trivy
+        enabled: true
+
+  # Secrets management
+  secrets:
+    provider: "github"
+    backup_provider: "1password"
+    onepassword_vault_key: "OP_VAULT_ID"
+
+  # Compliance
+  compliance:
+    gdpr: true
+    soc2: true
+    hipaa: false
+    audit_logging: true
+    data_retention_days: 90
+
+# ============================================================
+# ENVIRONMENT CONFIGURATION
+# ============================================================
+
+environments:
+  development:
+    debug: true
+    log_level: debug
+    mock_payments: true
+    use_tunnels: true
+
+  staging:
+    debug: false
+    log_level: info
+    mock_payments: true
+    use_tunnels: false
+
+  production:
+    debug: false
+    log_level: warn
+    mock_payments: false
+    use_tunnels: false
+    require_auth: true
+    rate_limiting: true
