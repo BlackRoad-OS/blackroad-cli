@@ -1,158 +1,73 @@
-# blackroad-cli
+# BlackRoad CLI
 
-**AI Agent Orchestration CLI with consent management, policy enforcement, and audit trails.**
+**Unified command-line interface for managing all 31 BlackRoad Enterprise products**
 
-```bash
-pip install blackroad-cli
-```
-
-## What is this?
-
-`blackroad-cli` is a command-line tool for orchestrating AI agents with built-in:
-
-- **Consent Management** - Agents must consent before executing tasks
-- **Policy Enforcement** - SEC Rule 2042 compliance gate included
-- **Audit Trails** - Full lineage tracking for every action
-- **Task Routing** - Priority-based task distribution across bot fleet
-
-## Quick Start
+## Installation
 
 ```bash
-# List available bots
-blackroad bot list
+# macOS (Homebrew)
+brew tap blackroad/cli
+brew install blackroad
 
-# Submit a task
-blackroad task submit --type "code-review" --priority high "Review PR #123"
+# Linux (apt)
+curl -fsSL https://cli.blackroad.io/install.sh | sh
 
-# Check task status
-blackroad task status TSK-20241130-143022
+# npm (cross-platform)
+npm install -g @blackroad/cli
 
-# View audit trail
-blackroad task lineage TSK-20241130-143022
+# Go (from source)
+go install github.com/BlackRoad-OS/blackroad-cli@latest
 ```
 
-## Commands
-
-### Services & Deployment
-| Command | Description |
-|---------|-------------|
-| `br status` | Check status of all BlackRoad services |
-| `br deploy [service]` | Deploy a service to Railway |
-| `br health` | Run health check on all services |
-| `br services` | List all services and their URLs |
-| `br logs [service]` | View logs for a service |
-| `br open <target>` | Open service/dashboard in browser |
-
-### Infrastructure Management
-| Command | Description |
-|---------|-------------|
-| `br ssh [target]` | SSH into servers (codex, lucidia, pi) |
-| `br ssh --list` | List all available SSH hosts |
-| `br ssh --test` | Test SSH connections to all hosts |
-| `br tunnel` | Manage Cloudflare Tunnel |
-| `br tunnel --start` | Start the Cloudflare tunnel |
-| `br tunnel --dns <subdomain>` | Create DNS record |
-| `br network` | Show network map |
-| `br network --scan` | Ping all hosts |
-| `br network --ports <host>` | Scan common ports |
-
-### Platform Management
-| Command | Description |
-|---------|-------------|
-| `br cf --kv` | List Cloudflare KV namespaces |
-| `br cf --kv-get <ns:key>` | Get KV value |
-| `br cf --d1` | List D1 databases |
-| `br cf --pages` | List Pages projects |
-| `br git --status` | Git status |
-| `br git --pr` | List pull requests |
-| `br git --pr-create` | Create new PR |
-| `br rw --list` | List Railway services |
-| `br rw --logs <service>` | View Railway logs |
-| `br rw --redeploy <service>` | Redeploy a service |
-
-### Advanced Features
-| Command | Description |
-|---------|-------------|
-| `br windows` | 🪟  Multi-window terminal (7 windows: SSH + AI) |
-
-### Fun Commands
-| Command | Description |
-|---------|-------------|
-| `br emoji [text]` | 🗣️  Translate text to emoji |
-| `br quiz` | 🎮 Play emoji language games |
-| `br notify` | 🔔 Emoji-based notifications |
-
-## 🪟 Multi-Window Terminal
-
-The killer feature! Access 7 simultaneous environments in one terminal:
-
-**SSH Windows:**
-- ARIA (192.168.4.64) - Raspberry Pi
-- CODEX (159.65.43.12) - DigitalOcean
-- SHELLFISH (174.138.44.45) - Cloud Server
-- ALICE (192.168.4.49) - Pi Network
-- LUCIDIA (192.168.4.38) - Raspberry Pi
-
-**AI Windows:**
-- CLAUDE - Anthropic Claude 3.5 with internet access
-- OLLAMA - Local AI (llama3.2, codellama, mistral)
-
-**Features:**
-- Real-time updates (1 second refresh)
-- Inter-window copy/paste (Ctrl+Y / Ctrl+P)
-- Scrolling with mouse or keyboard
-- Full internet access for all windows
-- AI windows can fetch web content, ping hosts, run curl
-- Tab to switch windows
-- Vim-style navigation
+## Usage
 
 ```bash
-br windows
+# List all products
+blackroad list
+
+# Deploy a product
+blackroad deploy vllm
+
+# Check product status
+blackroad status ollama
+
+# Show CLI version
+blackroad version
 ```
 
-See [WINDOWS.md](WINDOWS.md) for complete documentation.
+## Products (31 Total)
 
-## Architecture
+### AI Stack (6)
+- vLLM, Ollama, LocalAI, Whisper, TTS, Vosk
 
-```
-blackroad-cli/
-├── cli/           # Typer CLI entry points
-│   ├── console.py      # Main CLI app
-│   ├── consent_cli.py  # Consent management commands
-│   ├── agent_manager.py # Agent lifecycle
-│   └── consciousness_care.py # Agent wellbeing
-├── orchestrator/  # Core orchestration engine
-│   ├── router.py       # Task routing logic
-│   ├── policy.py       # Policy enforcement
-│   ├── lineage.py      # Audit trail tracking
-│   └── consent.py      # Consent protocols
-├── bots/          # Bot implementations
-└── config/        # Configuration schemas
-```
+### Infrastructure (10)
+- Headscale, MinIO, NetBird, Restic, Authelia, Borg, Innernet, Vault, RabbitMQ, Redis
 
-## Configuration
+### Databases (4)
+- ClickHouse, ArangoDB, PostgreSQL, Redis
 
-Create `~/.blackroad/config.yaml`:
+### Business Apps (6)
+- EspoCRM, SuiteCRM, Focalboard, Taiga, Mattermost, GitLab
 
-```yaml
-approvals:
-  - alice@company.com
-  - bob@company.com
+### Platform (5)
+- Keycloak, Grafana, Prometheus, Nextcloud, Synapse, Dendrite
 
-policies:
-  sec_2042:
-    enabled: true
-    require_human_approval: true
+## Features
 
-lineage:
-  storage: local
-  path: ~/.blackroad/lineage.jsonl
-```
+✅ **Unified Management** - Single CLI for all products
+✅ **Deploy Anywhere** - Cloud, on-premise, or hybrid
+✅ **Monitor Everything** - Real-time status and metrics
+✅ **Auto-Updates** - CLI updates automatically
+✅ **Cross-Platform** - macOS, Linux, Windows
+
+## Revenue Potential
+
+**$22.3M/year** across all 31 products
 
 ## License
 
-MIT - See [LICENSE](LICENSE) for details.
+**PROPRIETARY** - BlackRoad OS, Inc.
 
 ---
 
-Built by [BlackRoad OS](https://blackroad.io)
+**🖤 Built with BlackRoad 🛣️**
