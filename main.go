@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const version = "2.0.0"
+const version = "3.0.0"
 
 var products = []string{
 	// Wave 1 - Foundation (11)
@@ -23,6 +23,9 @@ var products = []string{
 	// Wave 5 - Observability & GitOps (10)
 	"opensearch", "loki", "victoriametrics", "cortex", "thanos",
 	"rook", "longhorn", "velero", "argocd", "flux",
+	// Wave 6 - Workflow & Service Mesh (10)
+	"temporal", "prefect", "airflow", "backstage", "jaeger",
+	"zipkin", "falco", "cilium", "linkerd", "istio",
 }
 
 func main() {
@@ -63,8 +66,8 @@ func printHelp() {
 	fmt.Println("  deploy <product>  Deploy a product")
 	fmt.Println("  status <product>  Check product status")
 	fmt.Println("  version           Show CLI version")
-	fmt.Println("\nProducts: 50 enterprise solutions (5 waves)")
-	fmt.Println("Revenue: $35.9M/year potential")
+	fmt.Println("\nProducts: 60 enterprise solutions (6 waves)")
+	fmt.Println("Revenue: $43.1M/year potential")
 }
 
 func listProducts() {
@@ -72,9 +75,9 @@ func listProducts() {
 	for i, p := range products {
 		fmt.Printf("%2d. %s\n", i+1, p)
 	}
-	fmt.Printf("\nTotal: %d products (5 waves)\n", len(products))
-	fmt.Println("Revenue potential: $35.9M/year")
-	fmt.Println("SKUs: 150 (50 products × 3 tiers)")
+	fmt.Printf("\nTotal: %d products (6 waves)\n", len(products))
+	fmt.Println("Revenue potential: $43.1M/year")
+	fmt.Println("SKUs: 180 (60 products × 3 tiers)")
 }
 
 func deployProduct(product string) {
