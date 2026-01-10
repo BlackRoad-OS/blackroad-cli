@@ -1,6 +1,6 @@
 # BlackRoad CLI
 
-**Unified command-line interface for managing all 31 BlackRoad Enterprise products**
+**Unified command-line interface for managing all 50 BlackRoad Enterprise products**
 
 ## Installation
 
@@ -35,22 +35,22 @@ blackroad status ollama
 blackroad version
 ```
 
-## Products (31 Total)
+## Products (50 Total - 5 Waves)
 
-### AI Stack (6)
-- vLLM, Ollama, LocalAI, Whisper, TTS, Vosk
+### Wave 1 - Foundation (11)
+- vLLM, Ollama, LocalAI, Headscale, MinIO, NetBird, Restic, Authelia, EspoCRM, Focalboard, Whisper
 
-### Infrastructure (10)
-- Headscale, MinIO, NetBird, Restic, Authelia, Borg, Innernet, Vault, RabbitMQ, Redis
+### Wave 2 - Expansion (10)
+- ClickHouse, Synapse, Taiga, Dendrite, SuiteCRM, ArangoDB, Borg, Innernet, TTS, Vosk
 
-### Databases (4)
-- ClickHouse, ArangoDB, PostgreSQL, Redis
+### Wave 3 - Acceleration (10)
+- Mattermost, GitLab, Nextcloud, Keycloak, Grafana, Prometheus, Vault, RabbitMQ, Redis, PostgreSQL
 
-### Business Apps (6)
-- EspoCRM, SuiteCRM, Focalboard, Taiga, Mattermost, GitLab
+### Wave 4 - DevOps Dominance (9)
+- Ansible, Jenkins, Harbor, Consul, Etcd, Traefik, Nginx, Caddy, HAProxy
 
-### Platform (5)
-- Keycloak, Grafana, Prometheus, Nextcloud, Synapse, Dendrite
+### Wave 5 - Observability & GitOps (10)
+- OpenSearch, Loki, VictoriaMetrics, Cortex, Thanos, Rook, Longhorn, Velero, ArgoCD, Flux
 
 ## Features
 
@@ -62,7 +62,8 @@ blackroad version
 
 ## Revenue Potential
 
-**$22.3M/year** across all 31 products
+**$35.9M/year** across all 50 products
+**150 SKUs** (50 products × 3 tiers)
 
 ## License
 
