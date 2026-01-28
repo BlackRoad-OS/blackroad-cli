@@ -27,6 +27,7 @@ import { scriptCommand } from '../commands/script.js';
 import { cryptoCommand } from '../commands/crypto.js';
 import { k8sCommand } from '../commands/k8s.js';
 import { logsAggCommand } from '../commands/logs-agg.js';
+import { agentsCommand } from '../commands/agents.js';
 
 const program = new Command();
 
@@ -112,6 +113,67 @@ program
   .option('-s, --search <term>', 'Search emoji dictionary')
   .option('-r, --random', 'Generate random emoji sentences')
   .action(emojiCommand);
+
+// Agents command
+program
+  .command('agents')
+  .alias('a')
+  .description('Start a multi-agent voice room')
+  .option('-s, --seed <text>', 'Seed prompt for the room')
+  .option('--seed-file <path>', 'Seed prompt from a file')
+  .option('--topics-file <path>', 'Run multiple prompts from a file (one per line)')
+  .option('-r, --rounds <n>', 'Rounds of agent-to-agent replies per prompt', '1')
+  .option('-m, --mode <mode>', 'Response mode: chain or broadcast')
+  .option('-a, --agenda <text>', 'Agenda or framing added to prompts')
+  .option('--room <name>', 'Room name for announcements')
+  .option('-p, --prefix <prefix>', 'Only include models with this prefix')
+  .option('-l, --limit <n>', 'Limit number of models')
+  .option('--exclude <pattern>', 'Exclude models matching regex')
+  .option('--remove <pattern>', 'Remove models matching regex from roster', (value, previous) => {
+    const list = Array.isArray(previous) ? previous : [];
+    return list.concat([value]);
+  }, [])
+  .option('--mute <pattern>', 'Mute models matching regex', (value, previous) => {
+    const list = Array.isArray(previous) ? previous : [];
+    return list.concat([value]);
+  }, [])
+  .option('--pin <pattern>', 'Pin models matching regex', (value, previous) => {
+    const list = Array.isArray(previous) ? previous : [];
+    return list.concat([value]);
+  }, [])
+  .option('--queue <pattern>', 'Queue models matching regex', (value, previous) => {
+    const list = Array.isArray(previous) ? previous : [];
+    return list.concat([value]);
+  }, [])
+  .option('--spotlight <pattern>', 'Spotlight one or more models (mutes others)')
+  .option('--shuffle', 'Shuffle speaker order each round')
+  .option('--parallel', 'Run broadcast replies in parallel')
+  .option('--round-robin', 'Rotate non-pinned speakers each round')
+  .option('--roles-file <path>', 'Assign per-model roles from a file (model=role)')
+  .option('--role-default <text>', 'Default role for all models')
+  .option('--speaker-count <n>', 'Limit active speakers per round')
+  .option('--speaker-delay <s>', 'Pause between speakers (seconds)')
+  .option('--round-delay <s>', 'Pause between rounds (seconds)')
+  .option('--topic-delay <s>', 'Pause between topics (seconds)')
+  .option('--roster-file <path>', 'Use a roster file for participants')
+  .option('--intro', 'Announce room details before starting')
+  .option('--rollcall', 'Ask each agent to say hello before the rounds')
+  .option('--summary', 'Moderator summarizes at the end')
+  .option('--summary-final', 'Add one final summary at the end')
+  .option('--summary-file <path>', 'Write summaries to a file')
+  .option('--minutes', 'Generate meeting minutes at the end')
+  .option('--minutes-file <path>', 'Write minutes to a file')
+  .option('--stats', 'Print speaker stats at the end')
+  .option('--stats-file <path>', 'Write speaker stats to a file')
+  .option('--scribe <model>', 'Model to use for minutes (default: moderator)')
+  .option('--moderator <model>', 'Moderator model (default: first model)')
+  .option('--transcript <path>', 'Write transcript to file')
+  .option('--roster', 'Print roster and exit')
+  .option('--max-chars <n>', 'Max characters per response')
+  .option('--context-lines <n>', 'Include last N lines of context in prompts')
+  .option('--mute-voice', 'Disable TTS output')
+  .option('--mic', 'Use microphone input via whisper.cpp')
+  .action(agentsCommand);
 
 // Notify command
 program
