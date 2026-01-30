@@ -1,6 +1,6 @@
 {
   "name": "@blackroad/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "BlackRoad OS command-line interface for managing services, deployments, and agents",
   "type": "module",
   "bin": {
