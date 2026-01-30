@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 // BR-CLI inventory command - manage infrastructure inventory
 import chalk from 'chalk';
 import Inventory from '../lib/inventory.js';
 import SelectorEngine from '../lib/selector.js';
+=======
+// BR-CLI Inventory Command
+import chalk from 'chalk';
+import Inventory from '../lib/inventory.js';
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
 import Table from 'cli-table3';
 
 export async function inventoryCommand(program) {
     const inventory = new Inventory();
+<<<<<<< HEAD
     const selector = new SelectorEngine(inventory);
 
     const cmd = program
@@ -164,5 +171,48 @@ export async function inventoryCommand(program) {
         .action(async () => {
             console.log(chalk.yellow('🔍 Discovering nodes...'));
             await inventory.discover();
+=======
+
+    const cmd = program
+        .command('inventory')
+        .description('Manage infrastructure inventory');
+
+    cmd
+        .command('list')
+        .alias('ls')
+        .description('List all nodes')
+        .action(() => {
+            if (inventory.nodes.length === 0) {
+                console.log(chalk.yellow('No nodes in inventory'));
+                return;
+            }
+
+            const table = new Table({
+                head: ['Name', 'IP', 'Role', 'Environment'],
+                style: { head: ['cyan'] }
+            });
+
+            inventory.nodes.forEach(node => {
+                table.push([node.name, node.ip, node.role, node.env || 'unknown']);
+            });
+
+            console.log(table.toString());
+        });
+
+    cmd
+        .command('add <name>')
+        .description('Add a node')
+        .option('--ip <ip>', 'IP address')
+        .option('--role <role>', 'Node role')
+        .option('--env <env>', 'Environment')
+        .action((name, options) => {
+            inventory.addNode({
+                name,
+                ip: options.ip,
+                role: options.role,
+                env: options.env
+            });
+            console.log(chalk.green('✓ Node added'));
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
         });
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // BR-CLI run command - execute operations across nodes
 import chalk from 'chalk';
 import Inventory from '../lib/inventory.js';
@@ -179,5 +180,26 @@ export async function runCommand(program) {
             console.log(chalk.green(`\n✓ ${successResults.length}/${nodes.length} nodes responded`));
             console.log(chalk.cyan(`⏱  Total time: ${totalTime}ms`));
             console.log(chalk.cyan(`⏱  Average node time: ${Math.round(avgDuration)}ms`));
+=======
+// BR-CLI Run Command
+import chalk from 'chalk';
+import Inventory from '../lib/inventory.js';
+
+export async function runCommand(program) {
+    const inventory = new Inventory();
+
+    const cmd = program
+        .command('run')
+        .description('Execute commands on remote nodes');
+
+    cmd
+        .command('exec <command>')
+        .description('Run command on selected nodes')
+        .option('-s, --selector <expr>', 'Node selector')
+        .action((command, options) => {
+            console.log(chalk.cyan('\n🚀 Executing command:\n'));
+            console.log(chalk.gray(`Command: ${command}`));
+            console.log(chalk.gray(`Nodes: ${inventory.nodes.length || 0}\n`));
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
         });
 }

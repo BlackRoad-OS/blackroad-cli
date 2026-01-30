@@ -27,6 +27,7 @@ import { scriptCommand } from '../commands/script.js';
 import { cryptoCommand } from '../commands/crypto.js';
 import { k8sCommand } from '../commands/k8s.js';
 import { logsAggCommand } from '../commands/logs-agg.js';
+<<<<<<< HEAD
 import { agentsCommand } from '../commands/agents.js';
 import { inventoryCommand } from '../commands/inventory.js';
 import { runCommand } from '../commands/run.js';
@@ -36,6 +37,24 @@ import BRMemory from '../lib/memory.js';
 import Telemetry from '../lib/telemetry.js';
 
 // Initialize enhancement systems
+=======
+
+// NEW ENHANCED FEATURES - Distributed Operations
+import BRMemory from '../lib/memory.js';
+import Telemetry from '../lib/telemetry.js';
+import PolicyEngine from '../lib/policy.js';
+import SecretsManager from '../lib/secrets.js';
+import { inventoryCommand } from '../commands/inventory.js';
+import { runCommand } from '../commands/run.js';
+import { policyCommand } from '../commands/policy.js';
+import { secretsCommand } from '../commands/secrets.js';
+import { workflowCommand } from '../commands/workflow.js';
+import { backupCommand } from '../commands/backup.js';
+import { testCommand } from '../commands/test.js';
+import { scaleCommand } from '../commands/scale.js';
+
+// Initialize enhanced systems
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
 const memory = new BRMemory();
 const telemetry = new Telemetry();
 
@@ -390,6 +409,7 @@ program
   .description('📊 Real-time log aggregation across all servers')
   .action(logsAggCommand);
 
+<<<<<<< HEAD
 // ===== NEW ENHANCEMENT COMMANDS =====
 
 // Inventory management command
@@ -403,10 +423,27 @@ program
   .command('telemetry')
   .alias('telem')
   .description('📊 View BR-CLI telemetry and performance metrics')
+=======
+// NEW: Enhanced distributed operations commands
+inventoryCommand(program);
+runCommand(program);
+policyCommand(program);
+secretsCommand(program);
+workflowCommand(program);
+backupCommand(program);
+testCommand(program);
+scaleCommand(program);
+
+// NEW: Telemetry command
+program
+  .command('telemetry')
+  .description('📊 View CLI usage metrics and performance')
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
   .action(() => {
     telemetry.showDashboard();
   });
 
+<<<<<<< HEAD
 // Memory command
 program
   .command('memory')
@@ -426,6 +463,25 @@ program
       );
     });
     console.log('');
+=======
+// NEW: Memory command
+program
+  .command('memory')
+  .description('📜 View command history and suggestions')
+  .option('-n, --limit <n>', 'Number of recent commands', '10')
+  .action((options) => {
+    const history = memory.getHistory(parseInt(options.limit));
+    
+    if (history.length === 0) {
+      console.log(chalk.yellow('No command history yet'));
+      return;
+    }
+
+    console.log(chalk.bold.cyan('\n📜 Command History\n'));
+    history.forEach((cmd, i) => {
+      console.log(chalk.gray(`${i + 1}.`), cmd.command, chalk.gray(cmd.timestamp));
+    });
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
   });
 
 // Show banner when run without arguments
@@ -454,11 +510,14 @@ if (process.argv.length <= 2) {
     `  ${chalk.cyan('br db')}           🗄️  Database tools\n` +
     `  ${chalk.cyan('br crypto')}       ₿  Crypto wallets\n` +
     `  ${chalk.cyan('br script')}       📜 Automation\n\n` +
+<<<<<<< HEAD
     `${chalk.hex('#00FF88')('✨ New Enhancement Features:')}\n` +
     `  ${chalk.cyan('br inventory')}    🏗️  Infrastructure management\n` +
     `  ${chalk.cyan('br run')}          ⚡ Distributed execution\n` +
     `  ${chalk.cyan('br telemetry')}    📊 Performance metrics\n` +
     `  ${chalk.cyan('br memory')}       🧠 Command history\n\n` +
+=======
+>>>>>>> fe685a4 (feat: Add policy, secrets, and workflow commands + new libs)
     `${chalk.gray('Run')} ${chalk.cyan('br --help')} ${chalk.gray('for all commands')}`,
     {
       padding: 1,
