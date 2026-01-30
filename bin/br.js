@@ -28,6 +28,16 @@ import { cryptoCommand } from '../commands/crypto.js';
 import { k8sCommand } from '../commands/k8s.js';
 import { logsAggCommand } from '../commands/logs-agg.js';
 import { agentsCommand } from '../commands/agents.js';
+import { inventoryCommand } from '../commands/inventory.js';
+import { runCommand } from '../commands/run.js';
+
+// Import new enhancement systems
+import BRMemory from '../lib/memory.js';
+import Telemetry from '../lib/telemetry.js';
+
+// Initialize enhancement systems
+const memory = new BRMemory();
+const telemetry = new Telemetry();
 
 const program = new Command();
 
@@ -380,6 +390,44 @@ program
   .description('📊 Real-time log aggregation across all servers')
   .action(logsAggCommand);
 
+// ===== NEW ENHANCEMENT COMMANDS =====
+
+// Inventory management command
+inventoryCommand(program);
+
+// Distributed execution command
+runCommand(program);
+
+// Telemetry command
+program
+  .command('telemetry')
+  .alias('telem')
+  .description('📊 View BR-CLI telemetry and performance metrics')
+  .action(() => {
+    telemetry.showDashboard();
+  });
+
+// Memory command
+program
+  .command('memory')
+  .alias('mem')
+  .description('🧠 View BR-CLI command history and context')
+  .option('-l, --limit <n>', 'Number of history items', '10')
+  .action(async (options) => {
+    const history = await memory.getHistory(parseInt(options.limit));
+    console.log(chalk.bold.cyan('\n🧠 Command History\n'));
+    history.forEach((record, i) => {
+      const status = record.result === 'success' ? chalk.green('✓') : chalk.red('✗');
+      console.log(
+        chalk.gray(`${i + 1}.`) + ' ' +
+        status + ' ' +
+        chalk.yellow(record.command) + ' ' +
+        chalk.gray(record.timestamp)
+      );
+    });
+    console.log('');
+  });
+
 // Show banner when run without arguments
 if (process.argv.length <= 2) {
   console.log(banner);
@@ -406,6 +454,11 @@ if (process.argv.length <= 2) {
     `  ${chalk.cyan('br db')}           🗄️  Database tools\n` +
     `  ${chalk.cyan('br crypto')}       ₿  Crypto wallets\n` +
     `  ${chalk.cyan('br script')}       📜 Automation\n\n` +
+    `${chalk.hex('#00FF88')('✨ New Enhancement Features:')}\n` +
+    `  ${chalk.cyan('br inventory')}    🏗️  Infrastructure management\n` +
+    `  ${chalk.cyan('br run')}          ⚡ Distributed execution\n` +
+    `  ${chalk.cyan('br telemetry')}    📊 Performance metrics\n` +
+    `  ${chalk.cyan('br memory')}       🧠 Command history\n\n` +
     `${chalk.gray('Run')} ${chalk.cyan('br --help')} ${chalk.gray('for all commands')}`,
     {
       padding: 1,
