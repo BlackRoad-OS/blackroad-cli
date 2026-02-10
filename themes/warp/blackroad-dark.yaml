@@ -1,0 +1,28 @@
+# BlackRoad Dark Theme for Warp Terminal
+# Install: Copy to ~/.warp/themes/
+
+name: "BlackRoad Dark"
+accent: "#6366f1"
+background: "#0a0a0f"
+foreground: "#e4e4e7"
+details: "darker"
+
+terminal_colors:
+  normal:
+    black: "#18181b"
+    red: "#ef4444"
+    green: "#22c55e"
+    yellow: "#eab308"
+    blue: "#3b82f6"
+    magenta: "#a855f7"
+    cyan: "#06b6d4"
+    white: "#e4e4e7"
+  bright:
+    black: "#3f3f46"
+    red: "#f87171"
+    green: "#4ade80"
+    yellow: "#facc15"
+    blue: "#60a5fa"
+    magenta: "#c084fc"
+    cyan: "#22d3ee"
+    white: "#fafafa"

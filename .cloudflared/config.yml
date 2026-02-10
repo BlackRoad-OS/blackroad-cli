@@ -1,0 +1,71 @@
+# Cloudflare Tunnel Configuration
+# BlackRoad OS Zero Trust Network Access
+#
+# To use:
+# 1. Create a tunnel: cloudflared tunnel create blackroad
+# 2. Route DNS: cloudflared tunnel route dns blackroad <hostname>
+# 3. Run: cloudflared tunnel run blackroad
+
+tunnel: ${CLOUDFLARE_TUNNEL_ID}
+credentials-file: /etc/cloudflared/credentials.json
+
+# Ingress rules - routes traffic to local services
+ingress:
+  # API Gateway
+  - hostname: api.blackroad.io
+    service: http://localhost:3000
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+
+  # WebSocket Server
+  - hostname: ws.blackroad.io
+    service: ws://localhost:8080
+    originRequest:
+      noTLSVerify: true
+
+  # Agent Hub
+  - hostname: agents.blackroad.io
+    service: http://localhost:4000
+    originRequest:
+      connectTimeout: 60s
+
+  # ML/LLM Server
+  - hostname: llm.blackroad.io
+    service: http://localhost:5000
+    originRequest:
+      connectTimeout: 120s
+      httpHostHeader: llm.blackroad.io
+
+  # RAG Service
+  - hostname: rag.blackroad.io
+    service: http://localhost:6000
+
+  # Dashboard
+  - hostname: dash.blackroad.io
+    service: http://localhost:3001
+
+  # Metrics/Monitoring
+  - hostname: metrics.blackroad.io
+    service: http://localhost:9090
+
+  # Default fallback (required)
+  - service: http_status:404
+
+# Logging
+loglevel: info
+
+# Metrics server
+metrics: localhost:2000
+
+# Automatic protocol selection
+protocol: auto
+
+# Grace period for connections
+grace-period: 30s
+
+# Retries
+retries: 5
+
+# Origin server name for TLS
+originServerName: blackroad.io

@@ -1,17 +1,455 @@
-# Model provider configuration
+# BlackRoad OS - AI Model Provider Configuration
+# Comprehensive list of all supported AI providers and models
+# Version: 2.0.0
+
+# ============================================================
+# COMMERCIAL PROVIDERS
+# ============================================================
+
 providers:
   openai:
     display_name: "OpenAI / ChatGPT"
     env_key: "OPENAI_API_KEY"
+    api_base: "https://api.openai.com/v1"
+    models:
+      - id: gpt-4o
+        name: "GPT-4o"
+        context: 128000
+        type: chat
+      - id: gpt-4o-mini
+        name: "GPT-4o Mini"
+        context: 128000
+        type: chat
+      - id: gpt-4-turbo
+        name: "GPT-4 Turbo"
+        context: 128000
+        type: chat
+      - id: o1-preview
+        name: "o1 Preview"
+        context: 128000
+        type: reasoning
+      - id: o1-mini
+        name: "o1 Mini"
+        context: 128000
+        type: reasoning
+      - id: text-embedding-3-large
+        name: "Embedding Large"
+        dimensions: 3072
+        type: embedding
+      - id: whisper-1
+        name: "Whisper"
+        type: audio
+
   anthropic:
     display_name: "Anthropic / Claude"
     env_key: "ANTHROPIC_API_KEY"
+    api_base: "https://api.anthropic.com/v1"
+    models:
+      - id: claude-sonnet-4-5-20250929
+        name: "Claude Sonnet 4.5"
+        context: 200000
+        type: chat
+      - id: claude-opus-4-5-20251101
+        name: "Claude Opus 4.5"
+        context: 200000
+        type: chat
+      - id: claude-3-5-haiku-20241022
+        name: "Claude 3.5 Haiku"
+        context: 200000
+        type: chat
+
   google:
     display_name: "Google / Gemini"
     env_key: "GOOGLE_API_KEY"
+    api_base: "https://generativelanguage.googleapis.com/v1"
+    models:
+      - id: gemini-2.0-flash
+        name: "Gemini 2.0 Flash"
+        context: 1000000
+        type: chat
+      - id: gemini-1.5-pro
+        name: "Gemini 1.5 Pro"
+        context: 2000000
+        type: chat
+      - id: gemini-1.5-flash
+        name: "Gemini 1.5 Flash"
+        context: 1000000
+        type: chat
+
   xai:
     display_name: "xAI / Grok"
     env_key: "XAI_API_KEY"
+    api_base: "https://api.x.ai/v1"
+    models:
+      - id: grok-2
+        name: "Grok 2"
+        context: 131072
+        type: chat
+      - id: grok-2-mini
+        name: "Grok 2 Mini"
+        context: 131072
+        type: chat
+
+  huggingface:
+    display_name: "Hugging Face"
+    env_key: "HUGGINGFACE_TOKEN"
+    api_base: "https://api-inference.huggingface.co"
+    hub_url: "https://huggingface.co"
+    # Models accessed via inference API or dedicated endpoints
+
   holo:
     display_name: "Custom / Holo"
     env_key: "HOLO_API_KEY"
+    custom: true
+
+# ============================================================
+# OPEN SOURCE MODELS (Auditable & Forkable)
+# These models can be self-hosted or used via HuggingFace
+# ============================================================
+
+open_source:
+  # Large Language Models (120B+ parameter class)
+  llm_large:
+    - id: meta-llama/Llama-3.1-405B-Instruct
+      name: "Llama 3.1 405B"
+      provider: Meta
+      parameters: "405B"
+      context: 128000
+      license: "Llama 3.1 Community License"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: deepseek-ai/DeepSeek-V3
+      name: "DeepSeek V3"
+      provider: DeepSeek
+      parameters: "671B (MoE)"
+      context: 128000
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: mistralai/Mistral-Large-Instruct-2407
+      name: "Mistral Large 2"
+      provider: Mistral AI
+      parameters: "123B"
+      context: 128000
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: Qwen/Qwen2.5-72B-Instruct
+      name: "Qwen 2.5 72B"
+      provider: Alibaba
+      parameters: "72B"
+      context: 131072
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: tiiuae/falcon-180B-chat
+      name: "Falcon 180B"
+      provider: TII
+      parameters: "180B"
+      context: 2048
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: databricks/dbrx-instruct
+      name: "DBRX"
+      provider: Databricks
+      parameters: "132B (MoE)"
+      context: 32768
+      license: "Databricks Open Model License"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: CohereForAI/c4ai-command-r-plus
+      name: "Command R+"
+      provider: Cohere
+      parameters: "104B"
+      context: 128000
+      license: "CC-BY-NC-4.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Medium LLMs (7B-70B)
+  llm_medium:
+    - id: meta-llama/Llama-3.1-70B-Instruct
+      name: "Llama 3.1 70B"
+      provider: Meta
+      parameters: "70B"
+      context: 128000
+      license: "Llama 3.1 Community License"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: mistralai/Mixtral-8x22B-Instruct-v0.1
+      name: "Mixtral 8x22B"
+      provider: Mistral AI
+      parameters: "141B (MoE)"
+      context: 65536
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: mistralai/Mixtral-8x7B-Instruct-v0.1
+      name: "Mixtral 8x7B"
+      provider: Mistral AI
+      parameters: "46.7B (MoE)"
+      context: 32768
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: 01-ai/Yi-1.5-34B-Chat
+      name: "Yi 1.5 34B"
+      provider: 01.AI
+      parameters: "34B"
+      context: 4096
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: google/gemma-2-27b-it
+      name: "Gemma 2 27B"
+      provider: Google
+      parameters: "27B"
+      context: 8192
+      license: "Gemma License"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: microsoft/Phi-3-medium-128k-instruct
+      name: "Phi-3 Medium"
+      provider: Microsoft
+      parameters: "14B"
+      context: 128000
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Small/Efficient LLMs
+  llm_small:
+    - id: meta-llama/Llama-3.1-8B-Instruct
+      name: "Llama 3.1 8B"
+      provider: Meta
+      parameters: "8B"
+      context: 128000
+      license: "Llama 3.1 Community License"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: microsoft/Phi-3-mini-128k-instruct
+      name: "Phi-3 Mini"
+      provider: Microsoft
+      parameters: "3.8B"
+      context: 128000
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: google/gemma-2-9b-it
+      name: "Gemma 2 9B"
+      provider: Google
+      parameters: "9B"
+      context: 8192
+      license: "Gemma License"
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Code-Specialized Models
+  code:
+    - id: deepseek-ai/DeepSeek-Coder-V2-Instruct
+      name: "DeepSeek Coder V2"
+      provider: DeepSeek
+      parameters: "236B (MoE)"
+      context: 128000
+      license: "MIT"
+      specialty: code
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: codellama/CodeLlama-70b-Instruct-hf
+      name: "CodeLlama 70B"
+      provider: Meta
+      parameters: "70B"
+      context: 16384
+      license: "Llama 2 Community License"
+      specialty: code
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: bigcode/starcoder2-15b-instruct-v0.1
+      name: "StarCoder2 15B"
+      provider: BigCode
+      parameters: "15B"
+      context: 16384
+      license: "BigCode OpenRAIL-M"
+      specialty: code
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: Qwen/Qwen2.5-Coder-32B-Instruct
+      name: "Qwen 2.5 Coder 32B"
+      provider: Alibaba
+      parameters: "32B"
+      context: 131072
+      license: "Apache 2.0"
+      specialty: code
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Embedding Models
+  embeddings:
+    - id: BAAI/bge-large-en-v1.5
+      name: "BGE Large"
+      provider: BAAI
+      dimensions: 1024
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: intfloat/e5-large-v2
+      name: "E5 Large V2"
+      provider: Microsoft
+      dimensions: 1024
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: thenlper/gte-large
+      name: "GTE Large"
+      provider: Alibaba
+      dimensions: 1024
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: nomic-ai/nomic-embed-text-v1.5
+      name: "Nomic Embed"
+      provider: Nomic
+      dimensions: 768
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: sentence-transformers/all-MiniLM-L6-v2
+      name: "MiniLM L6"
+      provider: Sentence Transformers
+      dimensions: 384
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Vision Models
+  vision:
+    - id: liuhaotian/llava-v1.6-34b
+      name: "LLaVA 1.6 34B"
+      provider: LLaVA Team
+      parameters: "34B"
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: OpenGVLab/InternVL2-26B
+      name: "InternVL2 26B"
+      provider: OpenGVLab
+      parameters: "26B"
+      license: "MIT"
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: Qwen/Qwen2-VL-72B-Instruct
+      name: "Qwen2 VL 72B"
+      provider: Alibaba
+      parameters: "72B"
+      license: "Apache 2.0"
+      auditable: true
+      forkable: true
+      safe: true
+
+  # Audio/Speech Models
+  audio:
+    - id: openai/whisper-large-v3
+      name: "Whisper Large V3"
+      provider: OpenAI
+      license: "MIT"
+      type: speech-to-text
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: facebook/seamless-m4t-v2-large
+      name: "SeamlessM4T V2"
+      provider: Meta
+      license: "CC-BY-NC-4.0"
+      type: speech-translation
+      auditable: true
+      forkable: true
+      safe: true
+
+    - id: suno/bark
+      name: "Bark"
+      provider: Suno
+      license: "MIT"
+      type: text-to-speech
+      auditable: true
+      forkable: true
+      safe: true
+
+# ============================================================
+# SECURITY & AUDITING
+# ============================================================
+
+security:
+  # Only use models that meet these criteria
+  requirements:
+    auditable: true      # Source code must be available
+    forkable: true       # License must allow forking
+    safe_license: true   # Must be open-source compatible
+
+  # Approved licenses
+  approved_licenses:
+    - "MIT"
+    - "Apache 2.0"
+    - "BSD"
+    - "CC-BY"
+    - "CC-BY-SA"
+    - "OpenRAIL"
+    - "Llama Community License"
+    - "Gemma License"
+
+  # Scanning configuration
+  model_scanning:
+    enabled: true
+    check_weights: true
+    check_tokenizer: true
+    verify_checksums: true

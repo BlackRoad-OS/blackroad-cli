@@ -1,0 +1,116 @@
+# BlackRoad Warp Workflows
+# Install: Copy to ~/.warp/workflows/
+
+name: BlackRoad OS
+description: "BlackRoad CLI workflows for Warp terminal"
+
+workflows:
+  # Deployment workflows
+  - name: Deploy All
+    command: br deploy --all
+    description: Deploy to all platforms (Railway, Cloudflare, Vercel, DO)
+    tags: [deploy, production]
+
+  - name: Deploy Railway
+    command: br deploy railway
+    description: Deploy backend services to Railway
+    tags: [deploy, railway]
+
+  - name: Deploy Cloudflare
+    command: br deploy cloudflare
+    description: Deploy static sites to Cloudflare Pages
+    tags: [deploy, cloudflare]
+
+  - name: Deploy Vercel
+    command: br deploy vercel
+    description: Deploy frontend to Vercel
+    tags: [deploy, vercel]
+
+  - name: Deploy Droplet
+    command: br deploy droplet
+    description: Deploy to DigitalOcean Droplet
+    tags: [deploy, digitalocean]
+
+  - name: Deploy Pi Fleet
+    command: br deploy pis
+    description: Deploy to Raspberry Pi edge nodes
+    tags: [deploy, raspberry-pi]
+
+  # Status and monitoring
+  - name: Status All
+    command: br status
+    description: Check status of all services
+    tags: [status, monitoring]
+
+  - name: Health Check
+    command: br health
+    description: Run health checks on all services
+    tags: [health, monitoring]
+
+  - name: View Logs
+    command: br logs {{service}}
+    description: View logs for a specific service
+    arguments:
+      - name: service
+        description: Service name (api-gateway, agent-hub, etc.)
+    tags: [logs, debugging]
+
+  # Agent management
+  - name: List Agents
+    command: blackroad agent list
+    description: List all available AI agents
+    tags: [agents, ai]
+
+  - name: Spawn Agent
+    command: blackroad agent spawn {{agent_name}}
+    description: Spawn a new AI agent instance
+    arguments:
+      - name: agent_name
+        description: Name of agent (nexus, cece, atlas, etc.)
+    tags: [agents, ai]
+
+  - name: Submit Task
+    command: blackroad task submit "{{task}}"
+    description: Submit a task to the orchestrator
+    arguments:
+      - name: task
+        description: Task description
+    tags: [tasks, orchestrator]
+
+  # Development
+  - name: Start Dev
+    command: docker compose up -d && br logs --follow
+    description: Start development environment
+    tags: [development]
+
+  - name: Stop Dev
+    command: docker compose down
+    description: Stop development environment
+    tags: [development]
+
+  - name: Tunnel Start
+    command: cloudflared tunnel run blackroad
+    description: Start Cloudflare tunnel
+    tags: [tunnel, networking]
+
+  # Database
+  - name: DB Migrate
+    command: npm run db:migrate
+    description: Run database migrations
+    tags: [database]
+
+  - name: DB Seed
+    command: npm run db:seed
+    description: Seed database with initial data
+    tags: [database]
+
+  # Git/GitHub
+  - name: PR Create
+    command: gh pr create --fill
+    description: Create a pull request
+    tags: [git, github]
+
+  - name: PR Merge
+    command: gh pr merge --auto --squash
+    description: Auto-merge PR when checks pass
+    tags: [git, github]
